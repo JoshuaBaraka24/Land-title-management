@@ -4,7 +4,7 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyCfRWeDdQv_0d_ZrDGRKABvbGbFliXhYlc",
   authDomain: "land-title-system.firebaseapp.com",
   projectId: "land-title-system",
   storageBucket: "land-title-system.appspot.com",
