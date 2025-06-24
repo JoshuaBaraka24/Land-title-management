@@ -34,14 +34,11 @@ function App() {
           <Route path="verify" element={<Verification />} />
           
           {/* Citizen routes */}
-          <Route path="disputes" element={
-            user?.role === 'citizen' ? <DisputeCenter /> : <Navigate to="/" />
-          } />
+           <Route path="disputes" element={<DisputeCenter />} />
+         
           
           {/* Admin routes */}
-          <Route path="admin" element={
-            user?.role === 'admin' ? <AdminPanel /> : <Navigate to="/" />
-          } />
+          <Route path="legal" element={<DisputeCenter adminView />} />
           
           <Route path="/admin/register-user" element={
            user?.role === 'admin' ? <UserRegistration /> : <Navigate to="/" />

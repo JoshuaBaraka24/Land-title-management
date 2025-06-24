@@ -65,12 +65,20 @@ export const getCurrentUser = async () => {
   const user = auth.currentUser;
   if (!user) return null;
   
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
-  return {
-    uid: user.uid,
-    email: user.email,
-    ...userDoc.data()
-  };
+  try {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    if (userDoc.exists()) {
+      return {
+        uid: user.uid,
+        email: user.email,
+        ...userDoc.data()
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    return null;
+  }
 };
 
 // Auth state listener
