@@ -23,6 +23,7 @@
         "truffle-contract": "3.0.6"
     },
     "dependencies": {
+        "@craco/craco": "^7.1.0",
         "@truffle/hdwallet-provider": "^2.1.15",
         "react-scripts": "^5.0.1"
     }
