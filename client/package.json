@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^7.1.0",
+    "@craco/craco": "^5.9.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@truffle/contract": "^4.6.31",
     "assert": "^2.1.0",
+    "browserify": "^17.0.1",
     "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
     "crypto-browserify": "^3.12.1",
     "firebase": "^11.9.1",
     "os-browserify": "^0.3.0",
@@ -20,12 +22,18 @@
     "react-dom": "^19.1.0",
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^7.6.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
+    "stream": "^0.0.3",
     "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "url": "^0.11.4",
     "vm-browserify": "^1.1.2",
     "web-vitals": "^2.1.4",
     "web3": "^4.16.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "scripts": {
     "start": "craco start",
@@ -50,5 +58,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@truffle/abi-utils": "^1.0.3",
+    "@truffle/codec": "^0.17.3"
   }
 }
