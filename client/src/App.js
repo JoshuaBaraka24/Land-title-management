@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { onAuthChange } from './auth';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
-import AdminPanel from './components/AdminPanel';
+import AdminPanel from './components/admin/AdminPanel';
 import UserRegistration from './components/admin/UserRegistration'; 
 import Verification from './components/Verification';
 import DisputeCenter from './components/DisputeCenter';
@@ -36,8 +36,11 @@ function App() {
           {/* Citizen routes */}
            <Route path="disputes" element={<DisputeCenter />} />
          
-          
-          {/* Admin routes */}
+        
+            {/* Admin routes */}
+          <Route path="admin" element={
+            user?.role === 'admin' ? <AdminPanel /> : <Navigate to="/" />
+          } />
           <Route path="legal" element={<DisputeCenter adminView />} />
           
           <Route path="/admin/register-user" element={

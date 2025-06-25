@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
-import { useAuth } from '../authContext'; // We'll create this context
+import { useAuth } from '../authContext'; 
 import './DisputeCenter.css';
 
 const DisputeCenter = ({ adminView }) => {

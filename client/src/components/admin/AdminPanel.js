@@ -1,4 +1,4 @@
-import UserRegistration from './admin/UserRegistration';
+import UserRegistration from './UserRegistration';
 
 const AdminPanel = () => {
   return (
@@ -14,3 +14,5 @@ const AdminPanel = () => {
     </div>
   );
 };
+
+export default AdminPanel;

@@ -4,12 +4,13 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCfRWeDdQv_0d_ZrDGRKABvbGbFliXhYlc",
-  authDomain: "land-title-system.firebaseapp.com",
-  projectId: "land-title-system",
-  storageBucket: "land-title-system.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456:web:abcdef123456"
+apiKey: "AIzaSyCfRWeDdQv_0d_ZrDGRKABvbGbFliXhYlc",
+  authDomain: "landtitlesystem.firebaseapp.com",
+  projectId: "landtitlesystem",
+  storageBucket: "landtitlesystem.firebasestorage.app",
+  messagingSenderId: "221865771145",
+  appId: "1:221865771145:web:826bb54f87535c7f71c658",
+  measurementId: "G-GKX2ZF4T1N"
 };
 
 const app = initializeApp(firebaseConfig);
