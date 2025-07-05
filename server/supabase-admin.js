@@ -97,26 +97,9 @@ async function createUsers() {
   }
 }
 
-// Function to get email by idNumber
-async function getEmailByIdNumber(idNumber) {
-  try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('email')
-      .eq('profile->idNumber', idNumber)
-      .single();
-    
-    if (error) throw error;
-    return data.email;
-  } catch (error) {
-    throw new Error('ID number not found');
-  }
-}
-
 // Export functions for use in other files
 module.exports = {
   createUsers,
-  getEmailByIdNumber,
   supabase
 };
 

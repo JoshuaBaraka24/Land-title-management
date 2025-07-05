@@ -206,39 +206,3 @@ export const getUserProfile = async (uid) => {
     return null;
   }
 };
-
-// Helper to get email by idNumber from backend (if needed)
-export async function getEmailByIdNumber(idNumber) {
-  const response = await fetch('/api/get-email-by-id', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idNumber }),
-  });
-  if (!response.ok) throw new Error('ID number not found');
-  const data = await response.json();
-  return data.email;
-}
-
-// Login with idNumber and password (if needed)
-export const loginWithIdNumber = async (idNumber, password) => {
-  try {
-    // 1. Get email from backend
-    const email = await getEmailByIdNumber(idNumber);
-
-    // 2. Authenticate with Supabase Auth
-    const { data, error } = await auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) throw error;
-
-    return {
-      uid: data.user.id,
-      email,
-      success: true
-    };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { register } from '../../auth';
 import './UserRegistration.css';
+import { supabase } from '../../supabase';
 
 const UserRegistration = () => {
   const [formData, setFormData] = useState({
@@ -35,6 +36,18 @@ const UserRegistration = () => {
           role: 'citizen',
           phone: ''
         });
+
+        // After successful sign up:
+        await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: result.user.id,
+              email: result.user.email,
+              role: result.user.user_metadata.role,
+              fullname: result.user.user_metadata.fullName
+            }
+          ]);
       } else {
         setMessage({ type: 'error', text: `Error: ${result.error}` });
       }
