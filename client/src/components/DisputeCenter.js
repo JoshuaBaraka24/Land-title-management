@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { supabase } from '../supabase';
 import { useAuth } from '../authContext'; 
 import './DisputeCenter.css';
 
@@ -22,26 +21,20 @@ const DisputeCenter = ({ adminView }) => {
     
     const fetchDisputes = async () => {
       setLoading(true);
-      let q;
-      
-      if (adminView) {
-        // Legal officers see all disputes
-        q = query(collection(db, 'disputes'));
-      } else {
-        // Citizens see only their disputes
-        q = query(collection(db, 'disputes'), 
-              where('reportedBy', '==', currentUser.uid));
-      }
       
       try {
-        const querySnapshot = await getDocs(q);
-        const disputesData = [];
+        let query = supabase.from('disputes').select('*');
         
-        querySnapshot.forEach((doc) => {
-          disputesData.push({ id: doc.id, ...doc.data() });
-        });
+        if (!adminView) {
+          // Citizens see only their disputes
+          query = query.eq('reported_by', currentUser.uid);
+        }
         
-        setDisputes(disputesData);
+        const { data, error } = await query;
+        
+        if (error) throw error;
+        
+        setDisputes(data || []);
       } catch (error) {
         console.error("Error fetching disputes:", error);
         alert("Failed to load disputes");
@@ -60,16 +53,31 @@ const DisputeCenter = ({ adminView }) => {
     setLoading(true);
     
     try {
-      await addDoc(collection(db, 'disputes'), {
-        ...newDispute,
+      const { error } = await supabase.from('disputes').insert({
+        dispute_id: `D${Date.now()}`,
+        title_deed_number: newDispute.titleDeedNumber,
+        description: newDispute.description,
+        evidence: newDispute.evidence ? [{ type: 'text', description: newDispute.evidence }] : [],
         status: 'pending',
-        reportedBy: currentUser.uid,
-        reporterEmail: currentUser.email,
-        createdAt: new Date()
+        reported_by: currentUser.uid,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
+      
+      if (error) throw error;
       
       setNewDispute({ titleDeedNumber: '', description: '', evidence: '' });
       alert('Dispute reported successfully!');
+      
+      // Refresh the disputes list
+      const { data, error: fetchError } = await supabase
+        .from('disputes')
+        .select('*')
+        .eq('reported_by', currentUser.uid);
+      
+      if (!fetchError) {
+        setDisputes(data || []);
+      }
     } catch (error) {
       console.error('Error reporting dispute:', error);
       alert('Failed to report dispute');
@@ -149,13 +157,13 @@ const DisputeCenter = ({ adminView }) => {
             <tbody>
               {disputes.map(dispute => (
                 <tr key={dispute.id}>
-                  <td>{dispute.titleDeedNumber}</td>
-                  {adminView && <td>{dispute.reporterEmail}</td>}
+                  <td>{dispute.title_deed_number}</td>
+                  {adminView && <td>{dispute.reported_by}</td>}
                   <td className="description-cell">{dispute.description}</td>
                   <td className={`status-${dispute.status}`}>
                     {dispute.status}
                   </td>
-                  <td>{dispute.createdAt?.toDate().toLocaleDateString()}</td>
+                  <td>{new Date(dispute.created_at).toLocaleDateString()}</td>
                   {adminView && (
                     <td>
                       <button>View Details</button>

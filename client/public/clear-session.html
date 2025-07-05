@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Session</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #cc3333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Session Clear Tool</h1>
+        <p>This will clear all browser storage and reload the app.</p>
+        <button onclick="clearAndReload()">Clear Session & Reload</button>
+    </div>
+
+    <script>
+        function clearAndReload() {
+            console.log('🧹 Clearing browser storage...');
+            
+            // Clear all storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear specific Supabase items
+            localStorage.removeItem('supabase.auth.token');
+            localStorage.removeItem('supabase.auth.expires_at');
+            localStorage.removeItem('supabase.auth.refresh_token');
+            
+            console.log('✅ Storage cleared, redirecting...');
+            
+            // Redirect to main app
+            window.location.href = '/';
+        }
+        
+        // Auto-clear on page load
+        window.onload = function() {
+            console.log('🔄 Auto-clearing session...');
+            clearAndReload();
+        };
+    </script>
+</body>
+</html> 

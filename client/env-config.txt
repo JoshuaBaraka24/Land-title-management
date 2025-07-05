@@ -1,0 +1,38 @@
+# Supabase Environment Variables Setup
+
+## Step 1: Create .env file in client directory
+Create a file named `.env` in the client directory with the following content:
+
+```
+REACT_APP_SUPABASE_URL=https://your-project-id.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+## Step 2: Get Your Supabase Credentials
+
+1. Go to https://supabase.com
+2. Sign in to your account
+3. Select your project
+4. Go to Settings > API
+5. Copy the "Project URL" and "anon public" key
+
+## Step 3: Replace the Placeholder Values
+
+Replace:
+- `https://your-project-id.supabase.co` with your actual Project URL
+- `your-anon-key-here` with your actual anon key
+
+## Example:
+```
+REACT_APP_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## For Server (if needed):
+Create a `.env` file in the server directory:
+```
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+Note: The service role key is different from the anon key and has admin privileges. 

@@ -35,7 +35,15 @@ module.exports = {
         "vm": require.resolve("vm-browserify"),
         "events": require.resolve("events/"),
         "buffer": require.resolve("buffer/"),
-        "fs": false
+        "fs": false,
+        "https": require.resolve("https-browserify"),
+        "http": require.resolve("stream-http"),
+        "zlib": require.resolve("browserify-zlib"),
+        "querystring": require.resolve("querystring-es3"),
+        "net": false,
+        "tls": false,
+        "child_process": false,
+        "http2": false
       };
 
       // 4. Add plugins for global polyfills
@@ -48,6 +56,15 @@ module.exports = {
         })
       ];
 
+       // Add plugins
+      webpackConfig.plugins = [
+        ...webpackConfig.plugins,
+        new webpack.ProvidePlugin({
+          process: 'process/browser',
+          Buffer: ['buffer', 'Buffer']
+        })
+      ];
+
       // 5. Handle source map warnings
       webpackConfig.ignoreWarnings = [
         ...(webpackConfig.ignoreWarnings || []),
@@ -56,6 +73,16 @@ module.exports = {
         /Failed to parse source map/,
         /Critical dependency/
       ];
+
+        // Add CSP nonce support
+      if (process.env.NODE_ENV === 'development') {
+        webpackConfig.plugins.push(
+          new webpack.SourceMapDevToolPlugin({
+            append: `\n//# sourceMappingURL=[url]`,
+            filename: `[file].map`,
+          })
+        );
+      }
 
       // 6. Add source-map-loader rule with exclusions
       const sourceMapLoaderRule = {
@@ -78,9 +105,13 @@ module.exports = {
   },
   eslint: {
     enable: true,
-    mode: "extends",
-    configure: {
-      useEslintrc: true
-    }
+    mode: "extends"
+  },
+  devServer: (devServerConfig) => {
+    // Add security headers
+    devServerConfig.headers = {
+      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.firebaseio.com https://*.infura.io;"
+    };
+    return devServerConfig;
   }
 };

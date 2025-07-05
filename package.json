@@ -8,7 +8,8 @@
     },
     "scripts": {
         "dev": "lite-server",
-        "test": "echo \"Error: no test specified\" && sexit 1"
+        "test": "echo \"Error: no test specified\" && sexit 1",
+        "create-users": "node firebaseSetup.js"
     },
     "author": "Joshua Baraka & Leroy Ochieng",
     "license": "ISC",

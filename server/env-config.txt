@@ -1,0 +1,38 @@
+# Server Environment Variables Setup
+
+## Step 1: Create .env file in server directory
+Create a file named `.env` in the server directory with the following content:
+
+```
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
+
+## Step 2: Get Your Supabase Service Role Key
+
+1. Go to https://supabase.com
+2. Sign in to your account
+3. Select your project
+4. Go to Settings > API
+5. Copy the "service_role" key (NOT the anon key)
+
+## Step 3: Replace the Placeholder Values
+
+Replace:
+- `https://your-project-id.supabase.co` with your actual Project URL
+- `your-service-role-key` with your actual service role key
+
+## Example:
+```
+SUPABASE_URL=https://abcdefghijklmnop.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## Step 4: Run the User Creation Script
+
+After setting up the .env file, run:
+```bash
+npm run create-users
+```
+
+This will create the test users in your database. 

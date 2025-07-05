@@ -22,4 +22,14 @@ contract LandRecord {
         records[_titleDeedNumber].verified = true;
         emit RecordVerified(_titleDeedNumber);
     }
+
+    function addRecord(string memory _titleDeedNumber, string memory _owner) public {
+        require(msg.sender == admin, "Only admin");
+        require(bytes(records[_titleDeedNumber].titleDeedNumber).length == 0, "Record already exists");
+        records[_titleDeedNumber] = Record({
+            titleDeedNumber: _titleDeedNumber,
+            owner: _owner,
+            verified: false
+        });
+    }
 }

@@ -1,0 +1,27 @@
+{
+  "name": "land-title-server",
+  "version": "1.0.0",
+  "description": "Server for Land Title Management System",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "create-users": "node supabase-admin.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "land-title",
+    "supabase",
+    "express"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
