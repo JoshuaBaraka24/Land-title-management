@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onAuthChange, logout } from './auth';
-import { getUserProfile } from './auth';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { getUserProfile, logout, onAuthChange, updateUserProfile } from './auth';
 
 const AuthContext = createContext();
 
@@ -22,6 +21,27 @@ export function AuthProvider({ children }) {
       setProfile(null);
     } catch (err) {
       console.error('Logout error:', err);
+    }
+  };
+
+  // Add update profile function to context
+  const handleUpdateProfile = async (profileData) => {
+    try {
+      if (!currentUser?.uid) {
+        throw new Error('No user logged in');
+      }
+      
+      const result = await updateUserProfile(currentUser.uid, profileData);
+      
+      if (result.success) {
+        setProfile(result.data);
+        return { success: true };
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (err) {
+      console.error('Update profile error:', err);
+      return { success: false, error: err.message };
     }
   };
 
@@ -71,7 +91,8 @@ export function AuthProvider({ children }) {
     profile,
     loading,
     error,
-    logout: handleLogout
+    logout: handleLogout,
+    updateProfile: handleUpdateProfile
   };
 
   // Always render children, but show error if there is one

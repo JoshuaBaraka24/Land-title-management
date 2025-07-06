@@ -1,4 +1,4 @@
-import { supabase, auth } from './supabase';
+import { auth, supabase } from './supabase';
 
 // User roles
 export const ROLES = {
@@ -204,5 +204,23 @@ export const getUserProfile = async (uid) => {
   } catch (error) {
     console.error("Error fetching user profile:", error);
     return null;
+  }
+};
+
+// Update user profile
+export const updateUserProfile = async (uid, profileData) => {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(profileData)
+      .eq('id', uid)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return { success: false, error: error.message };
   }
 };
