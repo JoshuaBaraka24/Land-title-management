@@ -1,11 +1,24 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import UserRegistration from './components/admin/UserRegistration'; 
-import Verification from './components/Verification';
-import DisputeCenter from './components/DisputeCenter';
-import { useAuth } from './authContext';
 import React, { lazy, Suspense } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useAuth } from './authContext';
+import About from './components/About';
+import UserRegistration from './components/admin/UserRegistration';
+import Dashboard from './components/Dashboard';
+import DisputeCenter from './components/DisputeCenter';
+import './components/GlobalStyles.css';
+import Homepage from './components/Homepage';
+import Login from './components/Login';
+import Verification from './components/Verification';
+
+// Profile Components
+import AdminProfile from './components/profiles/AdminProfile';
+import CitizenProfile from './components/profiles/CitizenProfile';
+import LegalProfile from './components/profiles/LegalProfile';
+
+// Edit Profile Components
+import EditAdminProfile from './components/profiles/EditAdminProfile';
+import EditCitizenProfile from './components/profiles/EditCitizenProfile';
+import EditLegalProfile from './components/profiles/EditLegalProfile';
 
 const AdminPanelLazy = lazy(() => import('./components/admin/AdminPanel'));
 
@@ -21,12 +34,14 @@ function App() {
       <BrowserRouter>
           <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Homepage />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           
-              <Route path="/" element={<Navigate to="/dashboard" />} />
-              
-              <Route path="dashboard" element={
-                currentUser ? <Dashboard user={currentUser} /> : <Navigate to="/login" />
+          {/* Protected Dashboard Routes */}
+          <Route path="dashboard" element={
+            currentUser ? <Dashboard user={currentUser} /> : <Navigate to="/login" />
           }>
             <Route path="verify" element={<Verification />} />
             
@@ -46,7 +61,24 @@ function App() {
             <Route path="legal" element={
                   currentUser?.role === 'legal' ? <DisputeCenter adminView /> : <Navigate to="/" />
             } />
+            
+            {/* Profile routes - Role-based */}
+            <Route path="profile" element={
+              currentUser?.role === 'admin' ? <AdminProfile /> :
+              currentUser?.role === 'legal' ? <LegalProfile /> :
+              <CitizenProfile />
+            } />
+            
+            {/* Edit Profile routes - Role-based */}
+            <Route path="profile/edit" element={
+              currentUser?.role === 'admin' ? <EditAdminProfile /> :
+              currentUser?.role === 'legal' ? <EditLegalProfile /> :
+              <EditCitizenProfile />
+            } />
           </Route>
+          
+          {/* Catch all route - redirect to homepage */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
           </Suspense>
       </BrowserRouter>
