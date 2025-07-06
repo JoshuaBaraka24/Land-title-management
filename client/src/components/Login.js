@@ -1,98 +1,140 @@
-import { useState, useEffect } from 'react';
-import { login } from '../auth';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { login, resetPassword } from '../auth';
 import { useAuth } from '../authContext';
-import { resetPassword } from '../auth';
+import './GlobalStyles.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [resetMsg, setResetMsg] = useState('');
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [currentUser, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
+    
     try {
       const result = await login(email, password);
       if (result.success) {
-        navigate('/');
+        // Add a small delay for smooth transition
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500);
       } else {
         setError(result.error);
+        setIsLoading(false);
       }
     } catch (err) {
       setError('Login failed. Please try again.');
+      setIsLoading(false);
     }
   };
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setResetMsg('');
+    setIsResetting(true);
+    
     if (!email) {
       setResetMsg('Please enter your email to reset password.');
+      setIsResetting(false);
       return;
     }
-    const result = await resetPassword(email);
-    if (result.success) {
-      setResetMsg('Password reset email sent! Check your inbox.');
-    } else {
-      setResetMsg(result.error);
+    
+    try {
+      const result = await resetPassword(email);
+      if (result.success) {
+        setResetMsg('Password reset email sent! Check your inbox.');
+      } else {
+        setResetMsg(result.error);
+      }
+    } catch (err) {
+      setResetMsg('Failed to send reset email. Please try again.');
     }
+    
+    setIsResetting(false);
+  };
+
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    // Clear error when user starts typing
+    if (error) setError('');
+    if (resetMsg) setResetMsg('');
   };
 
   return (
     <div className="login-container">
-      <h2>Land Title System Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <div className="login-card">
+        <div className="login-header">
+          <h2>Welcome Back!</h2>
+          <p className="login-subtitle">Sign in to your account</p>
         </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div style={{ marginTop: 8, marginBottom: 8 }}>
-          <button
-            type="button"
-            onClick={handleResetPassword}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#2980b9',
-              textDecoration: 'underline',
-              cursor: email ? 'pointer' : 'not-allowed',
-              opacity: email ? 1 : 0.5,
-              padding: 0,
-              font: 'inherit'
-            }}
-            disabled={!email}
+        
+        <form onSubmit={handleLogin}>
+          <div className="form-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              value={email}
+              onChange={handleInputChange(setEmail)}
+              placeholder="Enter your email"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={handleInputChange(setPassword)}
+              placeholder="Enter your password"
+              required
+              disabled={isLoading}
+            />
+          </div>
+          
+          <div className="forgot-password">
+            <button
+              type="button"
+              onClick={handleResetPassword}
+              disabled={!email || isLoading || isResetting}
+            >
+              {isResetting ? 'Sending...' : 'Forgot Password?'}
+            </button>
+          </div>
+          
+          {error && <p className="error">{error}</p>}
+          {resetMsg && <p className="info">{resetMsg}</p>}
+          
+          <button 
+            type="submit" 
+            className={`login-button ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading}
           >
-            Forgot Password?
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
+        </form>
+        
+        <div className="back-to-home">
+          <Link to="/" className="back-link">
+            ← Back to Homepage
+          </Link>
         </div>
-        {error && <p className="error">{error}</p>}
-        {resetMsg && <p className="info">{resetMsg}</p>}
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 }
