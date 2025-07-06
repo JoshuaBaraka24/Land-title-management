@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../authContext';
 import { supabase } from '../supabase';
-import { useAuth } from '../authContext'; 
 import './DisputeCenter.css';
+import './GlobalStyles.css';
 
 const DisputeCenter = ({ adminView }) => {
   const [disputes, setDisputes] = useState([]);
@@ -12,12 +13,10 @@ const DisputeCenter = ({ adminView }) => {
   });
   const [loading, setLoading] = useState(false);
   
-  // Get current user from auth context
   const { currentUser } = useAuth();
 
-  // Fetch disputes based on user role
   useEffect(() => {
-    if (!currentUser) return; // Wait until user is loaded
+    if (!currentUser) return;
     
     const fetchDisputes = async () => {
       setLoading(true);
@@ -26,7 +25,6 @@ const DisputeCenter = ({ adminView }) => {
         let query = supabase.from('disputes').select('*');
         
         if (!adminView) {
-          // Citizens see only their disputes
           query = query.eq('reported_by', currentUser.uid);
         }
         
@@ -91,90 +89,136 @@ const DisputeCenter = ({ adminView }) => {
     setNewDispute(prev => ({ ...prev, [name]: value }));
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'pending': return 'status-pending';
+      case 'resolved': return 'status-resolved';
+      case 'rejected': return 'status-rejected';
+      default: return 'status-pending';
+    }
+  };
+
   return (
-    <div className="dispute-center">
-      <h2>{adminView ? 'Dispute Management' : 'Report Land Dispute'}</h2>
-      
-      {!adminView && (
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Title Deed Number</label>
-            <input
-              type="text"
-              name="titleDeedNumber"
-              value={newDispute.titleDeedNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>Description</label>
-            <textarea
-              name="description"
-              value={newDispute.description}
-              onChange={handleChange}
-              required
-              rows={4}
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>Evidence (URLs or descriptions)</label>
-            <textarea
-              name="evidence"
-              value={newDispute.evidence}
-              onChange={handleChange}
-              rows={2}
-            />
-          </div>
-          
-          <button type="submit" disabled={loading}>
-            {loading ? 'Submitting...' : 'Report Dispute'}
-          </button>
-        </form>
-      )}
-      
-      <div className="dispute-list">
-        <h3>{adminView ? 'All Disputes' : 'My Reported Disputes'}</h3>
+    <div className="page-container">
+      <div className="content-card">
+        <div className="page-header">
+          <h2 className="page-title">
+            {adminView ? 'Dispute Management' : 'Report Land Dispute'}
+          </h2>
+          <p className="page-subtitle">
+            {adminView ? 'Manage and resolve land disputes' : 'Report a land title dispute for investigation'}
+          </p>
+        </div>
         
-        {loading ? (
-          <p>Loading disputes...</p>
-        ) : disputes.length === 0 ? (
-          <p>No disputes found</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Title Deed</th>
-                {adminView && <th>Reporter</th>}
-                <th>Description</th>
-                <th>Status</th>
-                <th>Date</th>
-                {adminView && <th>Actions</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {disputes.map(dispute => (
-                <tr key={dispute.id}>
-                  <td>{dispute.title_deed_number}</td>
-                  {adminView && <td>{dispute.reported_by}</td>}
-                  <td className="description-cell">{dispute.description}</td>
-                  <td className={`status-${dispute.status}`}>
-                    {dispute.status}
-                  </td>
-                  <td>{new Date(dispute.created_at).toLocaleDateString()}</td>
-                  {adminView && (
-                    <td>
-                      <button>View Details</button>
-                      {dispute.status === 'pending' && <button>Resolve</button>}
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {!adminView && (
+          <div className="dispute-form-section">
+            <h3>Report New Dispute</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Title Deed Number</label>
+                <input
+                  type="text"
+                  name="titleDeedNumber"
+                  value={newDispute.titleDeedNumber}
+                  onChange={handleChange}
+                  placeholder="Enter the title deed number in dispute"
+                  required
+                  disabled={loading}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Description of Dispute</label>
+                <textarea
+                  name="description"
+                  value={newDispute.description}
+                  onChange={handleChange}
+                  placeholder="Provide a detailed description of the dispute..."
+                  required
+                  rows={4}
+                  disabled={loading}
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>Supporting Evidence</label>
+                <textarea
+                  name="evidence"
+                  value={newDispute.evidence}
+                  onChange={handleChange}
+                  placeholder="Provide URLs, documents, or descriptions of evidence..."
+                  rows={3}
+                  disabled={loading}
+                />
+              </div>
+              
+              <button 
+                type="submit" 
+                className={`btn btn-primary btn-large ${loading ? 'loading' : ''}`}
+                disabled={loading}
+              >
+                {loading ? 'Submitting...' : 'Report Dispute'}
+              </button>
+            </form>
+          </div>
         )}
+        
+        <div className="dispute-list-section">
+          <h3>{adminView ? 'All Disputes' : 'My Reported Disputes'}</h3>
+          
+          {loading ? (
+            <div className="loading-message">
+              <p>Loading disputes...</p>
+            </div>
+          ) : disputes.length === 0 ? (
+            <div className="empty-state">
+              <span className="empty-icon">📋</span>
+              <p>No disputes found</p>
+            </div>
+          ) : (
+            <div className="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title Deed</th>
+                    {adminView && <th>Reporter</th>}
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    {adminView && <th>Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {disputes.map(dispute => (
+                    <tr key={dispute.id}>
+                      <td><strong>{dispute.title_deed_number}</strong></td>
+                      {adminView && <td>{dispute.reported_by}</td>}
+                      <td className="description-cell">
+                        <div className="description-content">
+                          {dispute.description}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-badge ${getStatusClass(dispute.status)}`}>
+                          {dispute.status}
+                        </span>
+                      </td>
+                      <td>{new Date(dispute.created_at).toLocaleDateString()}</td>
+                      {adminView && (
+                        <td className="action-buttons">
+                          <button className="btn btn-secondary btn-small">View</button>
+                          {dispute.status === 'pending' && (
+                            <button className="btn btn-primary btn-small">Resolve</button>
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
