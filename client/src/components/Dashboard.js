@@ -1,87 +1,125 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../authContext';
 import './Dashboard.css';
-import './GlobalStyles.css';
 
 const Dashboard = ({ user }) => {
-  const { logout, currentUser, profile } = useAuth();
-
-  console.log("Profile in Dashboard:", profile);
+  const { logout } = useAuth();
+  const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.reload();
+    logout();
   };
 
+  const getNavItems = () => {
+    const items = [
+      {
+        path: '/dashboard/verify',
+        label: 'Land Verification',
+        icon: '🔍',
+        available: true
+      }
+    ];
+
+    if (user?.role === 'citizen') {
+      items.push({
+        path: '/dashboard/disputes',
+        label: 'Report Disputes',
+        icon: '⚖️',
+        available: true
+      });
+    }
+
+    if (user?.role === 'admin') {
+      items.push(
+        {
+          path: '/dashboard/admin',
+          label: 'Admin Panel',
+          icon: '⚙️',
+          available: true
+        },
+        {
+          path: '/dashboard/admin/manage-land-records',
+          label: 'Manage Land Records',
+          icon: '📋',
+          available: true
+        },
+        {
+          path: '/dashboard/admin/register-user',
+          label: 'Register Users',
+          icon: '👤',
+          available: true
+        },
+        {
+          path: '/dashboard/admin/manage-users',
+          label: 'Manage Users',
+          icon: '👥',
+          available: true
+        }
+      );
+    }
+
+    if (user?.role === 'legal') {
+      items.push({
+        path: '/dashboard/legal',
+        label: 'Dispute Management',
+        icon: '⚖️',
+        available: true
+      });
+    }
+
+    items.push({
+      path: '/dashboard/profile',
+      label: 'Profile',
+      icon: '👤',
+      available: true
+    });
+
+    return items;
+  };
+
+  const navItems = getNavItems();
+
   return (
-    <div className="page-container">
-      <div className="content-card dashboard-card">
-        <header className="dashboard-header">
-          <div className="header-content">
-            <h1 className="page-title">Land Title Management System</h1>
-            <div className="user-info">
-              <span className="welcome-text">Welcome, {profile?.fullname || "User"}</span>
-              <button onClick={handleLogout} className="btn btn-secondary btn-small logout-btn">
-                Logout
-              </button>
-            </div>
+    <div className="dashboard">
+      <div className="dashboard-container">
+        {/* Sidebar */}
+        <aside className="dashboard-sidebar">
+          <div className="sidebar-header">
+            <h2>Dashboard</h2>
+            <p>Welcome, {user?.fullname || 'User'}</p>
           </div>
-        </header>
-        
-        <nav className="dashboard-nav">
-          <ul className="nav-list">
-            <li className="nav-item">
-              <Link to="verify" className="nav-link">
-                <span className="nav-icon">🔍</span>
-                Land Verification
-              </Link>
-            </li>
-            
-            {user?.role === 'citizen' && (
-              <li className="nav-item">
-                <Link to="disputes" className="nav-link">
-                  <span className="nav-icon">⚖️</span>
-                  Report Dispute
-                </Link>
-              </li>
-            )}
-            
-            {user?.role === 'admin' && (
-              <li className="nav-item">
-                <Link to="admin" className="nav-link">
-                  <span className="nav-icon">⚙️</span>
-                  Admin Panel
-                </Link>
-              </li>
-            )}
-            
-            {user?.role === 'legal' && (
-              <li className="nav-item">
-                <Link to="legal" className="nav-link">
-                  <span className="nav-icon">🏛️</span>
-                  Dispute Center
-                </Link>
-              </li>
-            )}
-            
-            <li className="nav-item">
-              <Link to="profile" className="nav-link">
-                <span className="nav-icon">👤</span>
-                My Profile
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        
+
+          <nav className="sidebar-nav">
+            <ul className="nav-list">
+              {navItems.map((item) => (
+                <li key={item.path} className="nav-item">
+                  <Link
+                    to={item.path}
+                    className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="sidebar-footer">
+            <button onClick={handleLogout} className="btn btn-outline logout-btn">
+              <span className="nav-icon">🚪</span>
+              Logout
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
         <main className="dashboard-main">
-          <Outlet />
+          <div className="main-content">
+            <Outlet />
+          </div>
         </main>
-        
-        <footer className="dashboard-footer">
-          <p>© {new Date().getFullYear()} Land Title Management System</p>
-        </footer>
       </div>
     </div>
   );

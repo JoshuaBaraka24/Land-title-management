@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../authContext';
 import '../../components/GlobalStyles.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import AnimatedStat from '../AnimatedStat';
 import './ProfilePages.css';
-import LandRecordList from '../LandRecordList';
 
 const AdminProfile = () => {
   const { profile } = useAuth();
@@ -103,149 +101,62 @@ const AdminProfile = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="profile-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
-        >
-          <span className="tab-icon">📊</span>
-          Overview
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'system-stats' ? 'active' : ''}`}
-          onClick={() => setActiveTab('system-stats')}
-        >
-          <span className="tab-icon">🖥️</span>
-          System Stats
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'activity' ? 'active' : ''}`}
-          onClick={() => setActiveTab('activity')}
-        >
-          <span className="tab-icon">📈</span>
-          Activity
-        </button>
-      </div>
-
+      {/* Remove the <div className="profile-tabs"> and all tab-button/tab-content logic. Only show the main profile info/edit form. */}
       {/* Profile Content */}
       <div className="profile-content">
-        {activeTab === 'overview' && (
-          <div className="tab-content">
-            {/* Personal Information Section */}
-            <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
-              <div className="section-header">
-                <h3>Administrator Information</h3>
-                <Link to="/dashboard/profile/edit" className="btn btn-secondary btn-small">
-                  Edit
-                </Link>
-              </div>
+        {/* Personal Information Section */}
+        <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
+          <div className="section-header">
+            <h3>Administrator Information</h3>
+            <Link to="/dashboard/profile/edit" className="btn btn-secondary btn-small">
+              Edit
+            </Link>
+          </div>
 
-              <div className="info-grid">
-                <div className="info-item">
-                  <label>Full Name</label>
-                  <span>{formData.fullname}</span>
-                </div>
-                <div className="info-item">
-                  <label>Email</label>
-                  <span>{formData.email}</span>
-                </div>
-                <div className="info-item">
-                  <label>Phone</label>
-                  <span>{formData.phone}</span>
-                </div>
-                <div className="info-item">
-                  <label>Employee ID</label>
-                  <span>{formData.employeeId}</span>
-                </div>
-                <div className="info-item">
-                  <label>Department</label>
-                  <span>{formData.department}</span>
-                </div>
-                <div className="info-item">
-                  <label>Access Level</label>
-                  <span className="access-badge">{formData.accessLevel}</span>
-                </div>
-                <div className="info-item full-width">
-                  <label>Address</label>
-                  <span>{formData.address}</span>
-                </div>
-              </div>
+          <div className="info-grid">
+            <div className="info-item">
+              <label>Full Name</label>
+              <span>{formData.fullname}</span>
             </div>
-
-            {/* Quick Actions */}
-            <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
-              <h3>Quick Actions</h3>
-              <div className="actions-grid">
-                {quickActions.map((action, index) => (
-                  <button key={index} className="action-card">
-                    <div className="action-icon">{action.icon}</div>
-                    <span className="action-title">{action.title}</span>
-                  </button>
-                ))}
-              </div>
+            <div className="info-item">
+              <label>Email</label>
+              <span>{formData.email}</span>
+            </div>
+            <div className="info-item">
+              <label>Phone</label>
+              <span>{formData.phone}</span>
+            </div>
+            <div className="info-item">
+              <label>Employee ID</label>
+              <span>{formData.employeeId}</span>
+            </div>
+            <div className="info-item">
+              <label>Department</label>
+              <span>{formData.department}</span>
+            </div>
+            <div className="info-item">
+              <label>Access Level</label>
+              <span className="access-badge">{formData.accessLevel}</span>
+            </div>
+            <div className="info-item full-width">
+              <label>Address</label>
+              <span>{formData.address}</span>
             </div>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'system-stats' && (
-          <div className="tab-content" id="system-stats">
-            <div className={`content-section ${isVisible.systemStats ? 'visible' : ''}`}>
-              <div className="section-header">
-                <h3>System Statistics</h3>
-                <button className="btn btn-primary btn-small">
-                  Generate Report
-                </button>
-              </div>
-              
-              <div className="stats-grid">
-                {systemStats.map((stat, index) => (
-                  <div key={index} className={`stat-card ${stat.color}`}>
-                    <div className="stat-icon">{stat.icon}</div>
-                    <div className="stat-content">
-                      <h4>{stat.label}</h4>
-                      <p className="stat-number">
-                        <AnimatedStat 
-                          target={stat.value} 
-                          decimals={stat.suffix === '%' ? 1 : 0}
-                          suffix={stat.suffix || ''}
-                        />
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Quick Actions */}
+        <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
+          <h3>Quick Actions</h3>
+          <div className="actions-grid">
+            {quickActions.map((action, index) => (
+              <button key={index} className="action-card">
+                <div className="action-icon">{action.icon}</div>
+                <span className="action-title">{action.title}</span>
+              </button>
+            ))}
           </div>
-        )}
-
-        {activeTab === 'activity' && (
-          <div className="tab-content" id="activity">
-            <div className={`content-section ${isVisible.recentActivity ? 'visible' : ''}`}>
-              <h3>Recent System Activity</h3>
-              
-              <div className="activity-timeline">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className={`activity-item ${activity.priority}`}>
-                    <div className="activity-icon">
-                      <span>{activity.icon}</span>
-                    </div>
-                    <div className="activity-content">
-                      <h4>{activity.title}</h4>
-                      <p>{activity.description}</p>
-                      <span className="activity-date">{activity.date}</span>
-                    </div>
-                    <div className="activity-priority">
-                      <span className={`priority-badge ${activity.priority}`}>
-                        {activity.priority}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

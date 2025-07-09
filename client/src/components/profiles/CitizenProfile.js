@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../authContext';
 import '../../components/GlobalStyles.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import AnimatedStat from '../AnimatedStat';
 import './ProfilePages.css';
-import LandRecordList from '../LandRecordList';
 
 const CitizenProfile = () => {
   const { profile, currentUser } = useAuth();
@@ -91,20 +89,11 @@ const CitizenProfile = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="profile-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'land-records' ? 'active' : ''}`}
-          onClick={() => setActiveTab('land-records')}
-        >
-          <span className="tab-icon">🏠</span>
-          Land Records
-        </button>
-      </div>
-
       {/* Profile Content */}
       <div className="profile-content">
 
+        {/* The following block was removed as per the edit hint */}
+        {/*
         {activeTab === 'land-records' && (
           <div className="tab-content" id="land-records">
             <div className={`content-section ${isVisible.landRecords ? 'visible' : ''}`}>
@@ -145,6 +134,7 @@ const CitizenProfile = () => {
             </div>
           </div>
         )}
+        */}
 
 
       </div>

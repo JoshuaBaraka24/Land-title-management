@@ -14,33 +14,25 @@
 
 /* About Hero Section */
 .about-hero {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(206, 17, 38, 0.7) 25%,
-    rgba(0, 102, 0, 0.7) 50%,
-    rgba(206, 17, 38, 0.7) 75%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
-  color: white;
-  padding: 120px 0 80px;
+  background: var(--pure-white);
+  padding: 4rem 0 2rem 0;
   text-align: center;
 }
 
-.about-title {
-  font-family: "Playfair Display", serif;
-  font-size: 4rem;
+.about-hero .hero-content h1 {
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 24px;
-  line-height: 1.2;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  font-family: "Inter", sans-serif;
 }
 
-.about-subtitle {
-  font-size: 1.4rem;
-  opacity: 0.9;
-  max-width: 800px;
+.about-hero .hero-subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
   margin: 0 auto;
-  line-height: 1.6;
+  font-family: "Inter", sans-serif;
 }
 
 /* Mission Section */

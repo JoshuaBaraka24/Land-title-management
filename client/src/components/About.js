@@ -1,131 +1,157 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useScrollReveal } from '../hooks/useScrollReveal';
 import './About.css';
-import AnimatedStat from './AnimatedStat';
-import './GlobalStyles.css';
 
 const About = () => {
-  const isVisible = useScrollReveal(['features', 'tech', 'contact']);
   return (
     <div className="about-page">
-      {/* Hero Section */}
-      <section className="about-hero">
-        <div className="container">
-          <div className="about-hero-content">
-            <h1 className="about-title">About Our Land Management System</h1>
-            <p className="about-subtitle">
-              Revolutionizing land title management in Kenya through blockchain technology and digital innovation
+      <div className="container">
+        {/* Hero Section */}
+        <section className="about-hero">
+          <div className="hero-content">
+            <h1>About Our Land Management System</h1>
+            <p className="hero-subtitle">
+              Empowering Kenya with secure, transparent, and efficient land management through cutting-edge blockchain technology.
             </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Mission Section */}
-      <section className="mission-section">
-        <div className="container">
-          <div className="mission-content">
+        {/* Mission Section */}
+        <section className="about-section">
+          <div className="section-header">
             <h2>Our Mission</h2>
-            <p>
-              To provide a secure, transparent, and efficient land title management system that empowers 
-              Kenyans with reliable access to their land records while ensuring the integrity and authenticity 
-              of all land transactions through cutting-edge blockchain technology.
-            </p>
+            <p>To revolutionize land management in Kenya by providing a secure, transparent, and accessible platform for land title verification and dispute resolution.</p>
           </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="features-section" id="features">
-        <div className="container">
-          <div className={`section-header ${isVisible.features ? 'visible' : ''}`}>
-            <h2>Key Features</h2>
-          </div>
-          <div className="features-grid">
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
+          
+          <div className="grid grid-3">
+            <div className="card feature-card">
               <div className="feature-icon">🔒</div>
-              <h3>Blockchain Security</h3>
-              <p>All land records are secured using advanced blockchain technology, ensuring tamper-proof and immutable records.</p>
+              <h3>Security First</h3>
+              <p>Advanced blockchain technology ensures the highest level of security for all land records and transactions.</p>
             </div>
             
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
+            <div className="card feature-card">
+              <div className="feature-icon">👁️</div>
+              <h3>Transparency</h3>
+              <p>Complete transparency in all land-related processes, making information accessible to authorized users.</p>
+            </div>
+            
+            <div className="card feature-card">
               <div className="feature-icon">⚡</div>
-              <h3>Instant Verification</h3>
-              <p>Verify land title authenticity and ownership details in real-time with our advanced verification system.</p>
-            </div>
-            
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
-              <div className="feature-icon">📱</div>
-              <h3>Digital Access</h3>
-              <p>Access your land records anytime, anywhere through our modern web platform and mobile applications.</p>
-            </div>
-            
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
-              <div className="feature-icon">🏛️</div>
-              <h3>Government Compliance</h3>
-              <p>Fully compliant with Kenyan land laws and regulations, ensuring legal validity of all transactions.</p>
-            </div>
-            
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
-              <div className="feature-icon">🔄</div>
-              <h3>Transparent Process</h3>
-              <p>Complete transparency in all land transactions with detailed audit trails and public verification.</p>
-            </div>
-            
-            <div className={`feature-item ${isVisible.features ? 'visible' : ''}`}>
-              <div className="feature-icon">🛡️</div>
-              <h3>Dispute Resolution</h3>
-              <p>Integrated dispute resolution system to handle land conflicts efficiently and fairly.</p>
+              <h3>Efficiency</h3>
+              <p>Streamlined processes reduce time and costs associated with land verification and dispute resolution.</p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Technology Section */}
-      <section className="technology-section">
-        <div className="container">
-          <div className="tech-content">
-            <h2>Technology Behind Our System</h2>
-            <div className="tech-grid">
-              <div className="tech-item">
-                <h3>Blockchain Technology</h3>
-                <p>We use Ethereum-based smart contracts to ensure the security and immutability of all land records. Each transaction is cryptographically signed and stored on the blockchain.</p>
+        {/* Features Section */}
+        <section className="about-section">
+          <div className="section-header">
+            <h2>Key Features</h2>
+            <p>Discover what makes our land management system the most advanced solution in Kenya.</p>
+          </div>
+          
+          <div className="features-grid">
+            <div className="feature-item">
+              <div className="feature-number">01</div>
+              <div className="feature-content">
+                <h3>Blockchain Verification</h3>
+                <p>All land titles are verified and stored on a secure blockchain, ensuring immutability and preventing fraud.</p>
               </div>
-              
-              <div className="tech-item">
-                <h3>Digital Identity Verification</h3>
-                <p>Advanced identity verification systems ensure that only authorized users can access and modify land records, preventing fraud and unauthorized access.</p>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-number">02</div>
+              <div className="feature-content">
+                <h3>Real-time Updates</h3>
+                <p>Instant updates and notifications for all land-related activities and status changes.</p>
               </div>
-              
-              <div className="tech-item">
-                <h3>Real-time Synchronization</h3>
-                <p>All changes to land records are synchronized in real-time across the network, ensuring consistency and up-to-date information for all users.</p>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-number">03</div>
+              <div className="feature-content">
+                <h3>Dispute Resolution</h3>
+                <p>Integrated dispute management system with professional legal oversight for fair resolution.</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-number">04</div>
+              <div className="feature-content">
+                <h3>Role-based Access</h3>
+                <p>Secure access control with different permissions for citizens, legal officers, and administrators.</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-number">05</div>
+              <div className="feature-content">
+                <h3>Digital Documentation</h3>
+                <p>Complete digital transformation of land records with secure document storage and retrieval.</p>
+              </div>
+            </div>
+            
+            <div className="feature-item">
+              <div className="feature-number">06</div>
+              <div className="feature-content">
+                <h3>Mobile Accessibility</h3>
+                <p>Access the system from any device, anywhere, ensuring convenience for all users.</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact Section */}
-      <section className="contact-section">
-        <div className="container">
-          <div className="contact-content">
-            <h2>Get in Touch</h2>
-            <p>Have questions about our system? Our team is here to help you.</p>
-            <div className="contact-info">
-              <div className="contact-item">
-                <strong>Email:</strong> info@landtitle.ke
-              </div>
-              <div className="contact-item">
-                <strong>Phone:</strong> +254 700 000 000
-              </div>
-              <div className="contact-item">
-                <strong>Address:</strong> Nairobi, Kenya
-              </div>
+        {/* Technology Section */}
+        <section className="about-section">
+          <div className="section-header">
+            <h2>Technology Stack</h2>
+            <p>Built with modern, secure, and scalable technologies to serve Kenya's land management needs.</p>
+          </div>
+          
+          <div className="tech-grid">
+            <div className="tech-card">
+              <div className="tech-icon">🔗</div>
+              <h4>Blockchain</h4>
+              <p>Ethereum-based smart contracts for secure land record management</p>
+            </div>
+            
+            <div className="tech-card">
+              <div className="tech-icon">⚛️</div>
+              <h4>React</h4>
+              <p>Modern frontend framework for responsive and interactive user interfaces</p>
+            </div>
+            
+            <div className="tech-card">
+              <div className="tech-icon">🗄️</div>
+              <h4>Supabase</h4>
+              <p>Secure backend database and authentication system</p>
+            </div>
+            
+            <div className="tech-card">
+              <div className="tech-icon">🔐</div>
+              <h4>Web3</h4>
+              <p>Blockchain integration and wallet connectivity</p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* CTA Section */}
+        <section className="about-section">
+          <div className="cta-card">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of Kenyans who trust our system for their land management needs.</p>
+            <div className="cta-buttons">
+              <Link to="/" className="btn btn-primary">
+                Access System
+              </Link>
+              <Link to="/dashboard/verify" className="btn btn-outline">
+                Verify Land Title
+              </Link>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

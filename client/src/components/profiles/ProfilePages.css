@@ -773,50 +773,6 @@
   gap: 0.5rem;
 }
 
-.btn-primary {
-  background: linear-gradient(
-    135deg,
-    var(--kenyan-black) 0%,
-    var(--kenyan-red) 25%,
-    var(--kenyan-green) 50%,
-    var(--kenyan-red) 75%,
-    var(--kenyan-black) 100%
-  );
-  background-size: 200% 200%;
-  color: white;
-  box-shadow: 0 4px 16px rgba(206, 17, 38, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(206, 17, 38, 0.4);
-  animation: gradientShift 2s ease infinite;
-}
-
-.btn-secondary {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(255, 255, 255, 0.9) 100%
-  );
-  color: var(--kenyan-red);
-  border: 2px solid var(--kenyan-red);
-  box-shadow: 0 4px 16px rgba(206, 17, 38, 0.2);
-}
-
-.btn-secondary:hover {
-  background: var(--kenyan-red);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(206, 17, 38, 0.3);
-}
-
-.btn-small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-}
-
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
