@@ -16,7 +16,7 @@ export default function Login() {
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/dashboard');
+      navigate('/');
     }
   }, [currentUser, navigate]);
 
@@ -30,7 +30,7 @@ export default function Login() {
       if (result.success) {
         // Add a small delay for smooth transition
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/');
         }, 500);
       } else {
         setError(result.error);

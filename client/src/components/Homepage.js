@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../authContext';
 import heroBgImage from '../assets/hero-bg.jpg';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -8,11 +9,50 @@ import './GlobalStyles.css';
 import './Homepage.css';
 
 const Homepage = () => {
+  const { currentUser, profile, logout } = useAuth();
+  const navigate = useNavigate();
   const scrollY = useScrollPosition();
-  const isVisible = useScrollReveal(['services', 'stats', 'cta']);
+  const isVisible = useScrollReveal(['services']);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
+  };
+
+  const scrollToContact = () => {
+    const footer = document.querySelector('.homepage-footer');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="homepage">
+      {/* Navbar */}
+      <nav className="homepage-navbar">
+        <div className="navbar-container">
+          <div className="navbar-left">
+            <span className="welcome-text">Welcome, {profile?.fullname || "User"}</span>
+            {currentUser?.role === 'admin' && (
+              <Link to="/dashboard/admin" className="navbar-btn">Admin Dashboard</Link>
+            )}
+            {currentUser?.role === 'citizen' && (
+              <Link to="/dashboard/verify" className="navbar-btn">Land Verification</Link>
+            )}
+            {currentUser?.role === 'legal' && (
+              <Link to="/dashboard/legal" className="navbar-btn">Dispute Management</Link>
+            )}
+          </div>
+          
+          <div className="navbar-right">
+            <Link to="/about" className="navbar-link">About</Link>
+            <button onClick={scrollToContact} className="navbar-link">Contact Us</button>
+            <button onClick={handleLogout} className="logout-btn">Logout</button>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <section className="hero-section">
         <div 
@@ -29,10 +69,6 @@ const Homepage = () => {
         </div>
         <div className="hero-content">
           <div className="hero-text">
-            <div className="hero-badge">
-              <span className="badge-icon">🏛️</span>
-              <span className="badge-text">Official Government System</span>
-            </div>
             <h1 className="hero-title">
               <span className="title-line">Secure Land</span>
               <span className="title-line">Management</span>
@@ -43,16 +79,6 @@ const Homepage = () => {
               <br />
               <span className="subtitle-highlight">Transparent • Secure • Trusted</span>
             </p>
-            <div className="hero-buttons">
-              <Link to="/login" className="btn btn-primary btn-large hero-btn-primary">
-                <span className="btn-icon">🔐</span>
-                Access System
-              </Link>
-              <Link to="/about" className="btn btn-secondary btn-large hero-btn-secondary">
-                <span className="btn-icon">📋</span>
-                Learn More
-              </Link>
-            </div>
           </div>
         </div>
         <div className="hero-scroll-indicator">
@@ -65,87 +91,65 @@ const Homepage = () => {
       <section className="services-section" id="services">
         <div className="container">
           <div className={`section-header ${isVisible.services ? 'visible' : ''}`}>
-            <h2 className="section-title">Our Services</h2>
+            <h2 className="section-title">Services</h2>
             <p className="section-subtitle">
               Comprehensive land management solutions for all your needs
             </p>
           </div>
           
           <div className="services-grid">
-            <Link to="/login" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
+            {/* Land Verification - Available to all users */}
+            <Link to="/dashboard/verify" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
               <div className="service-icon">🔍</div>
               <h3>Land Verification</h3>
               <p>Verify land title authenticity and ownership details instantly</p>
               <div className="service-link">Get Started →</div>
             </Link>
             
-            <Link to="/login" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
-              <div className="service-icon">📋</div>
-              <h3>Title Registration</h3>
-              <p>Register new land titles with secure digital documentation</p>
-              <div className="service-link">Register Now →</div>
-            </Link>
+            {/* Citizen-specific services */}
+            {currentUser?.role === 'citizen' && (
+              <Link to="/dashboard/disputes" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
+                <div className="service-icon">⚖️</div>
+                <h3>Report Disputes</h3>
+                <p>Report disputes to be resolved by legal officers</p>
+                <div className="service-link">Report Issue →</div>
+              </Link>
+            )}
             
-            <Link to="/login" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
-              <div className="service-icon">⚖️</div>
-              <h3>Dispute Resolution</h3>
-              <p>Report and resolve land disputes through our legal framework</p>
-              <div className="service-link">Report Issue →</div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="stats-section" id="stats">
-        <div className="container">
-          <div className="stats-grid">
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={50000} suffix="+" />
-              </div>
-              <div className="stat-label">Land Titles Registered</div>
-            </div>
+            {/* Admin-specific services */}
+            {currentUser?.role === 'admin' && (
+              <>
+                <Link to="/dashboard/admin/manage-land-records" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
+                  <div className="service-icon">📋</div>
+                  <h3>Title Registration</h3>
+                  <p>Register new land titles with secure digital documentation</p>
+                  <div className="service-link">Register Now →</div>
+                </Link>
+                
+                <Link to="/dashboard/admin/register-user" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
+                  <div className="service-icon">👤</div>
+                  <h3>Register Users</h3>
+                  <p>Register new users into the system</p>
+                  <div className="service-link">Register User →</div>
+                </Link>
+              </>
+            )}
             
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={99.9} decimals={1} suffix="%" />
-              </div>
-              <div className="stat-label">System Uptime</div>
-            </div>
-            
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={24} suffix="/7" />
-              </div>
-              <div className="stat-label">Support Available</div>
-            </div>
-            
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={100} suffix="%" />
-              </div>
-              <div className="stat-label">Secure & Verified</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="cta-section" id="cta">
-        <div className="container">
-          <div className={`cta-content ${isVisible.cta ? 'visible' : ''}`}>
-            <h2>Ready to Get Started?</h2>
-            <p>Join thousands of Kenyans who trust our system for their land management needs</p>
-            <Link to="/login" className="btn btn-primary btn-large">
-              Sign In Now
-            </Link>
+            {/* Legal officer-specific services */}
+            {currentUser?.role === 'legal' && (
+              <Link to="/dashboard/legal" className={`service-card service-card-link ${isVisible.services ? 'visible' : ''}`}>
+                <div className="service-icon">⚖️</div>
+                <h3>Dispute Resolution</h3>
+                <p>Report and resolve land disputes through our legal framework</p>
+                <div className="service-link">Manage Disputes →</div>
+              </Link>
+            )}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="homepage-footer">
+      <footer className="homepage-footer" id="contact">
         <div className="container">
           <div className="footer-content">
             <div className="footer-section">
@@ -156,10 +160,25 @@ const Homepage = () => {
             <div className="footer-section">
               <h4>Quick Links</h4>
               <ul>
-                <li><Link to="/login">Sign In</Link></li>
-                <li><Link to="/about">About Us</Link></li>
-                <li><Link to="/contact">Contact</Link></li>
-                <li><Link to="/help">Help & Support</Link></li>
+                {currentUser?.role === 'citizen' && (
+                  <>
+                    <li><Link to="/dashboard/verify">Land Verification</Link></li>
+                    <li><Link to="/dashboard/disputes">Report Dispute</Link></li>
+                  </>
+                )}
+                {currentUser?.role === 'admin' && (
+                  <>
+                    <li><Link to="/dashboard/verify">Land Verification</Link></li>
+                    <li><Link to="/dashboard/admin/manage-land-records">Manage Land Records</Link></li>
+                    <li><Link to="/dashboard/admin/manage-users">Manage Users</Link></li>
+                  </>
+                )}
+                {currentUser?.role === 'legal' && (
+                  <>
+                    <li><Link to="/dashboard/verify">Land Verification</Link></li>
+                    <li><Link to="/dashboard/legal">Dispute Management</Link></li>
+                  </>
+                )}
               </ul>
             </div>
             

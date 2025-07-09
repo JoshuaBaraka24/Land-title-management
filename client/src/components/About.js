@@ -6,7 +6,7 @@ import AnimatedStat from './AnimatedStat';
 import './GlobalStyles.css';
 
 const About = () => {
-  const isVisible = useScrollReveal(['features', 'tech', 'stats', 'contact']);
+  const isVisible = useScrollReveal(['features', 'tech', 'contact']);
   return (
     <div className="about-page">
       {/* Hero Section */}
@@ -106,44 +106,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="stats-section" id="stats">
-        <div className="container">
-          <div className={`section-header ${isVisible.stats ? 'visible' : ''}`}>
-            <h2>System Statistics</h2>
-          </div>
-          <div className="stats-grid">
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={50000} suffix="+" />
-              </div>
-              <div className="stat-label">Land Titles Registered</div>
-            </div>
-            
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={99.9} decimals={1} suffix="%" />
-              </div>
-              <div className="stat-label">System Uptime</div>
-            </div>
-            
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={24} suffix="/7" />
-              </div>
-              <div className="stat-label">Support Available</div>
-            </div>
-            
-            <div className={`stat-item ${isVisible.stats ? 'visible' : ''}`}>
-              <div className="stat-number">
-                <AnimatedStat target={100} suffix="%" />
-              </div>
-              <div className="stat-label">Secure & Verified</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
       <section className="contact-section">
         <div className="container">
@@ -161,9 +123,6 @@ const About = () => {
                 <strong>Address:</strong> Nairobi, Kenya
               </div>
             </div>
-            <Link to="/login" className="btn btn-primary btn-large">
-              Get Started Today
-            </Link>
           </div>
         </div>
       </section>

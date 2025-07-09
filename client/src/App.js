@@ -39,9 +39,9 @@ function App() {
           <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={currentUser ? <Homepage /> : <Navigate to="/login" />} />
           <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={currentUser ? <Navigate to="/" /> : <Login />} />
           
           {/* Protected Dashboard Routes */}
           <Route path="dashboard" element={

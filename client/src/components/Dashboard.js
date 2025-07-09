@@ -9,12 +9,10 @@ const Dashboard = ({ user }) => {
 
   console.log("Profile in Dashboard:", profile);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
   };
 
   return (

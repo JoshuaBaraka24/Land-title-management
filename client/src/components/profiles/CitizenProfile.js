@@ -9,8 +9,8 @@ import LandRecordList from '../LandRecordList';
 
 const CitizenProfile = () => {
   const { profile, currentUser } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
-  const isVisible = useScrollReveal(['profile-info', 'land-records', 'activity']);
+  const [activeTab, setActiveTab] = useState('land-records');
+  const isVisible = useScrollReveal(['profile-info', 'land-records']);
 
   const [formData, setFormData] = useState({
     fullname: profile?.fullname || 'John Doe',
@@ -94,106 +94,16 @@ const CitizenProfile = () => {
       {/* Navigation Tabs */}
       <div className="profile-tabs">
         <button 
-          className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
-          onClick={() => setActiveTab('overview')}
-        >
-          <span className="tab-icon">📊</span>
-          Overview
-        </button>
-        <button 
           className={`tab-button ${activeTab === 'land-records' ? 'active' : ''}`}
           onClick={() => setActiveTab('land-records')}
         >
           <span className="tab-icon">🏠</span>
           Land Records
         </button>
-        <button 
-          className={`tab-button ${activeTab === 'activity' ? 'active' : ''}`}
-          onClick={() => setActiveTab('activity')}
-        >
-          <span className="tab-icon">📈</span>
-          Activity
-        </button>
       </div>
 
       {/* Profile Content */}
       <div className="profile-content">
-        {activeTab === 'overview' && (
-          <div className="tab-content">
-            {/* Personal Information Section */}
-            <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
-              <div className="section-header">
-                <h3>Personal Information</h3>
-                <Link to="/dashboard/profile/edit" className="btn btn-secondary btn-small">
-                  Edit
-                </Link>
-              </div>
-
-              <div className="info-grid">
-                <div className="info-item">
-                  <label>Full Name</label>
-                  <span>{formData.fullname}</span>
-                </div>
-                <div className="info-item">
-                  <label>Email</label>
-                  <span>{formData.email}</span>
-                </div>
-                <div className="info-item">
-                  <label>Phone</label>
-                  <span>{formData.phone}</span>
-                </div>
-                <div className="info-item">
-                  <label>ID Number</label>
-                  <span>{formData.idNumber}</span>
-                </div>
-                <div className="info-item">
-                  <label>Date of Birth</label>
-                  <span>{new Date(formData.dateOfBirth).toLocaleDateString()}</span>
-                </div>
-                <div className="info-item">
-                  <label>Occupation</label>
-                  <span>{formData.occupation}</span>
-                </div>
-                <div className="info-item full-width">
-                  <label>Address</label>
-                  <span>{formData.address}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <div className={`content-section ${isVisible.profileInfo ? 'visible' : ''}`}>
-              <h3>Quick Overview</h3>
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <div className="stat-icon">🏠</div>
-                  <div className="stat-content">
-                    <h4>Land Titles</h4>
-                    <p className="stat-number">
-                      <AnimatedStat target={landRecords.length} />
-                    </p>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-icon">💰</div>
-                  <div className="stat-content">
-                    <h4>Total Value</h4>
-                    <p className="stat-number">KES 40M</p>
-                  </div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-icon">✅</div>
-                  <div className="stat-content">
-                    <h4>Verified</h4>
-                    <p className="stat-number">
-                      <AnimatedStat target={1} />
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {activeTab === 'land-records' && (
           <div className="tab-content" id="land-records">
@@ -236,28 +146,7 @@ const CitizenProfile = () => {
           </div>
         )}
 
-        {activeTab === 'activity' && (
-          <div className="tab-content" id="activity">
-            <div className={`content-section ${isVisible.activity ? 'visible' : ''}`}>
-              <h3>Recent Activity</h3>
-              
-              <div className="activity-timeline">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="activity-item">
-                    <div className="activity-icon">
-                      <span>{activity.icon}</span>
-                    </div>
-                    <div className="activity-content">
-                      <h4>{activity.title}</h4>
-                      <p>{activity.description}</p>
-                      <span className="activity-date">{new Date(activity.date).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   );

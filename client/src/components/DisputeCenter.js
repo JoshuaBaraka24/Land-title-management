@@ -25,35 +25,51 @@ const DisputeCenter = ({ adminView }) => {
         let query = supabase.from('disputes').select('*');
         
         if (!adminView) {
-          query = query.eq('reported_by', currentUser.uid);
+          // For citizen view, check both UID and fullname to handle existing and new disputes
+          query = query.or(`reported_by.eq.${currentUser.uid},reported_by.eq.${currentUser.fullname}`);
         }
         
         const { data, error } = await query;
         
         if (error) throw error;
         
-        // If admin view, fetch reporter names for all disputes
+        // If admin view, fetch reporter names for disputes that still have UIDs
         if (adminView && data && data.length > 0) {
-          const reporterIds = [...new Set(data.map(dispute => dispute.reported_by))];
+          const disputesWithUIDs = data.filter(dispute => 
+            dispute.reported_by && dispute.reported_by.length > 20 // UIDs are typically longer
+          );
           
-          const { data: profiles, error: profilesError } = await supabase
-            .from('profiles')
-            .select('id, fullname, email')
-            .in('id', reporterIds);
-          
-          if (!profilesError && profiles) {
-            const profilesMap = {};
-            profiles.forEach(profile => {
-              profilesMap[profile.id] = profile;
-            });
+          if (disputesWithUIDs.length > 0) {
+            const reporterIds = [...new Set(disputesWithUIDs.map(dispute => dispute.reported_by))];
             
-            // Add reporter info to disputes
-            const disputesWithReporters = data.map(dispute => ({
-              ...dispute,
-              reporter: profilesMap[dispute.reported_by] || { fullname: 'Unknown User', email: 'Unknown' }
-            }));
+            const { data: profiles, error: profilesError } = await supabase
+              .from('profiles')
+              .select('id, email, fullname')
+              .in('id', reporterIds);
             
-            setDisputes(disputesWithReporters);
+            if (!profilesError && profiles) {
+              const profilesMap = {};
+              profiles.forEach(profile => {
+                profilesMap[profile.id] = profile;
+              });
+              
+              // Update disputes with UIDs to show fullnames
+              const updatedDisputes = data.map(dispute => {
+                if (dispute.reported_by && dispute.reported_by.length > 20) {
+                  // This is likely a UID, try to get the fullname
+                  const profile = profilesMap[dispute.reported_by];
+                  return {
+                    ...dispute,
+                    reported_by: profile ? profile.fullname : dispute.reported_by
+                  };
+                }
+                return dispute;
+              });
+              
+              setDisputes(updatedDisputes);
+            } else {
+              setDisputes(data || []);
+            }
           } else {
             setDisputes(data || []);
           }
@@ -99,7 +115,7 @@ const DisputeCenter = ({ adminView }) => {
         evidence: newDispute.evidence ? [{ type: 'text', description: newDispute.evidence }] : [],
         status: 'pending',
         priority: 'medium',
-        reported_by: currentUser.uid,
+        reported_by: currentUser.fullname,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
@@ -124,7 +140,7 @@ const DisputeCenter = ({ adminView }) => {
       const { data, error: fetchError } = await supabase
         .from('disputes')
         .select('*')
-        .eq('reported_by', currentUser.uid);
+        .or(`reported_by.eq.${currentUser.uid},reported_by.eq.${currentUser.fullname}`);
       
       if (!fetchError) {
         setDisputes(data || []);
@@ -245,19 +261,7 @@ const DisputeCenter = ({ adminView }) => {
                   {disputes.map(dispute => (
                     <tr key={dispute.id}>
                       <td><strong>{dispute.title_deed_number}</strong></td>
-                      {adminView && (
-                        <td>
-                          {dispute.reporter ? (
-                            <div>
-                              <strong>{dispute.reporter.fullname || 'Unknown User'}</strong>
-                              <br />
-                              <small style={{ color: '#666' }}>{dispute.reporter.email}</small>
-                            </div>
-                          ) : (
-                            dispute.reported_by
-                          )}
-                        </td>
-                      )}
+                      {adminView && <td>{dispute.reported_by}</td>}
                       <td className="description-cell">
                         <div className="description-content">
                           {dispute.description}
@@ -271,7 +275,6 @@ const DisputeCenter = ({ adminView }) => {
                       <td>{new Date(dispute.created_at).toLocaleDateString()}</td>
                       {adminView && (
                         <td className="action-buttons">
-                          <button className="btn btn-secondary btn-small">View</button>
                           {dispute.status === 'pending' && (
                             <button className="btn btn-primary btn-small">Resolve</button>
                           )}
