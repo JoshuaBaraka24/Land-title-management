@@ -5832,12 +5832,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x6473c9BDd64d84443B2000E5b63b8BE4D9e8F1D0",
-      "transactionHash": "0x60c31d0fb8ae8a45a784aa0c3bf73bb0891c2a4666d9b79452d9211789d6d383"
+      "address": "0x94C81eEeD3e1BA2FCaAb823d83561E7810cB469A",
+      "transactionHash": "0x8f5d4378b544af816ae94b9845ee99a167c70795c0eff8200eb377d88b9a78f2"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-07-05T17:12:49.500Z",
+  "updatedAt": "2025-07-08T22:34:31.257Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

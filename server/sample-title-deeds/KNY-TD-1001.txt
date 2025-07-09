@@ -1,0 +1,8 @@
+Kenya Land Title Deed
+====================
+Title Deed Number: KNY-TD-1001
+Owner: Citizen1
+Location: Nairobi
+Area: 4.55 Ha
+Registration Date: 2013-10-13
+Status: VERIFIED

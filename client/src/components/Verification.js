@@ -34,16 +34,30 @@ export default function Verification() {
       // 2. Check blockchain verification (if blockchain is still being used)
       try {
         const { contract } = await loadBlockchainData();
-        const record = await contract.records(titleDeed);
-        
-        setResult(record.verified ? 
-          "✅ Officially Verified" : 
-          "⚠️ Not Verified");
+        console.log('Contract loaded:', contract);
+        if (!contract || !contract.records) {
+          throw new Error('Blockchain contract not loaded or records method missing');
+        }
+        console.log('Calling contract.records...');
+        const record = await withTimeout(contract.records(titleDeed), 10000); // 10s timeout
+        console.log('Blockchain record:', record);
+        setResult(record.verified
+          ? "✅ Officially Verified (Blockchain & Database match)"
+          : "⚠️ Not Verified on Blockchain (Check with authorities)");
       } catch (blockchainError) {
-        // If blockchain is not available, just show database result
-        setResult(data.verified ? 
-          "✅ Record Found (Database)" : 
-          "⚠️ Record Found but Not Verified");
+        console.error('Blockchain verification error:', blockchainError);
+        // Custom error messages based on error type
+        let tip = "";
+        if (blockchainError.message.includes('not loaded')) {
+          tip = " (Our system could not connect to the blockchain. Please try again later or contact support.)";
+        } else if (blockchainError.message.includes('network') || blockchainError.message.includes('connection')) {
+          tip = " (Network error: Please check your internet connection or try again later.)";
+        } else if (blockchainError.message.includes('records is not a function')) {
+          tip = " (System error: Please contact support with this error message.)";
+        }
+        setResult(data.verified
+          ? `✅ Record Found in Database, but Blockchain verification is unavailable${tip}`
+          : `⚠️ Record Found in Database, but Blockchain verification is unavailable${tip}`);
       }
     } catch (error) {
       console.error('Verification error:', error);
@@ -73,6 +87,8 @@ export default function Verification() {
           <h2 className="page-title">Land Verification</h2>
           <p className="page-subtitle">Verify land title authenticity and ownership</p>
         </div>
+
+
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -98,6 +114,30 @@ export default function Verification() {
         {result && (
           <div className={`message ${getResultClass()}`}>
             <strong>Verification Result:</strong> {result}
+            <div style={{ marginTop: '0.5em', fontSize: '0.95em', color: '#555' }}>
+              {result.includes('unavailable') && (
+                <>
+                  <p>
+                    <b>Tip:</b> If you believe this is an error, please try again later or <a href="mailto:support@example.com">contact support</a>.<br/>
+                    Blockchain verification may be temporarily unavailable due to network or system issues.
+                  </p>
+                </>
+              )}
+              {result.includes('Not Verified') && !result.includes('unavailable') && (
+                <>
+                  <p>
+                    <b>Tip:</b> If your title deed is not verified, please visit your local land office for further assistance.
+                  </p>
+                </>
+              )}
+              {result.includes('Officially Verified') && (
+                <>
+                  <p>
+                    <b>Tip:</b> This title deed is officially verified in both our database and the blockchain. You may print or save this result for your records.
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         )}
         
@@ -124,4 +164,10 @@ export default function Verification() {
       </div>
     </div>
   );
+}
+function withTimeout(promise, ms) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Blockchain call timed out')), ms)
+  );
+  return Promise.race([promise, timeout]);
 }

@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { register } from '../../auth';
 import './UserRegistration.css';
-import { supabase } from '../../supabase';
 
 const UserRegistration = () => {
   const [formData, setFormData] = useState({
@@ -20,12 +18,21 @@ const UserRegistration = () => {
     setMessage({ type: '', text: '' });
     
     try {
-      const result = await register(
-        formData.email,
-        formData.password,
-        formData.role,
-        formData.phone
-      );
+      // Use server-side API instead of client-side signup
+      const response = await fetch('/api/admin/create-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+          phone: formData.phone
+        })
+      });
+      
+      const result = await response.json();
       
       if (result.success) {
         setMessage({ type: 'success', text: 'User registered successfully!' });
@@ -36,18 +43,6 @@ const UserRegistration = () => {
           role: 'citizen',
           phone: ''
         });
-
-        // After successful sign up:
-        await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: result.user.id,
-              email: result.user.email,
-              role: result.user.user_metadata.role,
-              fullname: result.user.user_metadata.fullName
-            }
-          ]);
       } else {
         setMessage({ type: 'error', text: `Error: ${result.error}` });
       }

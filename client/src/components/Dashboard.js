@@ -25,7 +25,6 @@ const Dashboard = ({ user }) => {
             <h1 className="page-title">Land Title Management System</h1>
             <div className="user-info">
               <span className="welcome-text">Welcome, {profile?.fullname || "User"}</span>
-              <span className="user-role">({profile?.role})</span>
               <button onClick={handleLogout} className="btn btn-secondary btn-small logout-btn">
                 Logout
               </button>

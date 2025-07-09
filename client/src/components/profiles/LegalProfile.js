@@ -113,7 +113,6 @@ const LegalProfile = () => {
         
         <div className="profile-info">
           <h1 className="profile-name">{formData.fullname}</h1>
-          <p className="profile-role">Legal Officer</p>
           <p className="profile-email">{formData.email}</p>
           <p className="profile-specialization">Specialization: {formData.specialization}</p>
         </div>

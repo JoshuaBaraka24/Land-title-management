@@ -20,6 +20,10 @@ import EditAdminProfile from './components/profiles/EditAdminProfile';
 import EditCitizenProfile from './components/profiles/EditCitizenProfile';
 import EditLegalProfile from './components/profiles/EditLegalProfile';
 
+// Admin Management Components
+import ManageLandRecords from './components/admin/ManageLandRecords';
+import ManageUsers from './components/admin/ManageUsers';
+
 const AdminPanelLazy = lazy(() => import('./components/admin/AdminPanel'));
 
 function App() {
@@ -55,6 +59,14 @@ function App() {
             
             <Route path="admin/register-user" element={
                   currentUser?.role === 'admin' ? <UserRegistration /> : <Navigate to="/" />
+            } />
+            
+            <Route path="admin/manage-land-records" element={
+                  currentUser?.role === 'admin' ? <ManageLandRecords /> : <Navigate to="/" />
+            } />
+            
+            <Route path="admin/manage-users" element={
+                  currentUser?.role === 'admin' ? <ManageUsers /> : <Navigate to="/" />
             } />
             
             {/* Legal officer routes */}

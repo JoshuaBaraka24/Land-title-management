@@ -5,9 +5,10 @@ import '../../components/GlobalStyles.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import AnimatedStat from '../AnimatedStat';
 import './ProfilePages.css';
+import LandRecordList from '../LandRecordList';
 
 const CitizenProfile = () => {
-  const { profile } = useAuth();
+  const { profile, currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const isVisible = useScrollReveal(['profile-info', 'land-records', 'activity']);
 
@@ -80,7 +81,6 @@ const CitizenProfile = () => {
         
         <div className="profile-info">
           <h1 className="profile-name">{formData.fullname}</h1>
-          <p className="profile-role">Citizen</p>
           <p className="profile-email">{formData.email}</p>
         </div>
 

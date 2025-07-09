@@ -32,7 +32,34 @@ const DisputeCenter = ({ adminView }) => {
         
         if (error) throw error;
         
-        setDisputes(data || []);
+        // If admin view, fetch reporter names for all disputes
+        if (adminView && data && data.length > 0) {
+          const reporterIds = [...new Set(data.map(dispute => dispute.reported_by))];
+          
+          const { data: profiles, error: profilesError } = await supabase
+            .from('profiles')
+            .select('id, fullname, email')
+            .in('id', reporterIds);
+          
+          if (!profilesError && profiles) {
+            const profilesMap = {};
+            profiles.forEach(profile => {
+              profilesMap[profile.id] = profile;
+            });
+            
+            // Add reporter info to disputes
+            const disputesWithReporters = data.map(dispute => ({
+              ...dispute,
+              reporter: profilesMap[dispute.reported_by] || { fullname: 'Unknown User', email: 'Unknown' }
+            }));
+            
+            setDisputes(disputesWithReporters);
+          } else {
+            setDisputes(data || []);
+          }
+        } else {
+          setDisputes(data || []);
+        }
       } catch (error) {
         console.error("Error fetching disputes:", error);
         alert("Failed to load disputes");
@@ -51,18 +78,44 @@ const DisputeCenter = ({ adminView }) => {
     setLoading(true);
     
     try {
-      const { error } = await supabase.from('disputes').insert({
+      // First, check if the title deed exists
+      const { data: landRecord, error: landError } = await supabase
+        .from('land_records')
+        .select('title_deed_number')
+        .eq('title_deed_number', newDispute.titleDeedNumber)
+        .single();
+      
+      if (landError || !landRecord) {
+        alert('Title deed not found. Please enter a valid title deed number.');
+        setLoading(false);
+        return;
+      }
+      
+      const disputeData = {
+        id: `dispute-${Date.now()}`,
         dispute_id: `D${Date.now()}`,
         title_deed_number: newDispute.titleDeedNumber,
         description: newDispute.description,
         evidence: newDispute.evidence ? [{ type: 'text', description: newDispute.evidence }] : [],
         status: 'pending',
+        priority: 'medium',
         reported_by: currentUser.uid,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      });
+      };
       
-      if (error) throw error;
+      console.log('Submitting dispute data:', disputeData);
+      
+      const { error } = await supabase.from('disputes').insert(disputeData);
+      
+      if (error) {
+        console.error('Supabase insert error details:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        console.error('Error details:', error.details);
+        console.error('Error hint:', error.hint);
+        throw error;
+      }
       
       setNewDispute({ titleDeedNumber: '', description: '', evidence: '' });
       alert('Dispute reported successfully!');
@@ -192,7 +245,19 @@ const DisputeCenter = ({ adminView }) => {
                   {disputes.map(dispute => (
                     <tr key={dispute.id}>
                       <td><strong>{dispute.title_deed_number}</strong></td>
-                      {adminView && <td>{dispute.reported_by}</td>}
+                      {adminView && (
+                        <td>
+                          {dispute.reporter ? (
+                            <div>
+                              <strong>{dispute.reporter.fullname || 'Unknown User'}</strong>
+                              <br />
+                              <small style={{ color: '#666' }}>{dispute.reporter.email}</small>
+                            </div>
+                          ) : (
+                            dispute.reported_by
+                          )}
+                        </td>
+                      )}
                       <td className="description-cell">
                         <div className="description-content">
                           {dispute.description}

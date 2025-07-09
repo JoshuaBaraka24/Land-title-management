@@ -1,0 +1,112 @@
+[
+  {
+    "titleDeedNumber": "KNY-TD-1001",
+    "ownerName": "Citizen1",
+    "ownerId": "30eb6e87-984a-438e-9efb-9b8e4cc5a614",
+    "location": "Nairobi",
+    "area": "4.55 Ha",
+    "registrationDate": "2013-10-13",
+    "id": "KNY-TD-1001",
+    "email": "citizen1@example.com",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1002",
+    "ownerName": "Citizen1",
+    "ownerId": "30eb6e87-984a-438e-9efb-9b8e4cc5a614",
+    "location": "Mombasa",
+    "area": "2.57 Ha",
+    "registrationDate": "2019-07-09",
+    "id": "KNY-TD-1002",
+    "email": "citizen1@example.com",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1003",
+    "ownerName": "Citizen1",
+    "ownerId": "30eb6e87-984a-438e-9efb-9b8e4cc5a614",
+    "location": "Kisumu",
+    "area": "3.27 Ha",
+    "registrationDate": "2013-04-17",
+    "id": "KNY-TD-1003",
+    "email": "citizen1@example.com",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1004",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Nakuru",
+    "area": "3.20 Ha",
+    "registrationDate": "2018-07-27",
+    "id": "KNY-TD-1004",
+    "email": "",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1005",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Eldoret",
+    "area": "2.05 Ha",
+    "registrationDate": "2019-06-10",
+    "id": "KNY-TD-1005",
+    "email": "",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1006",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Thika",
+    "area": "3.18 Ha",
+    "registrationDate": "2019-08-11",
+    "id": "KNY-TD-1006",
+    "email": "",
+    "verified": false
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1007",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Machakos",
+    "area": "4.90 Ha",
+    "registrationDate": "2022-12-10",
+    "id": "KNY-TD-1007",
+    "email": "",
+    "verified": false
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1008",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Naivasha",
+    "area": "3.35 Ha",
+    "registrationDate": "2015-07-23",
+    "id": "KNY-TD-1008",
+    "email": "",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1009",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Kitale",
+    "area": "2.74 Ha",
+    "registrationDate": "2014-06-13",
+    "id": "KNY-TD-1009",
+    "email": "",
+    "verified": true
+  },
+  {
+    "titleDeedNumber": "KNY-TD-1010",
+    "ownerName": "Unassigned",
+    "ownerId": null,
+    "location": "Garissa",
+    "area": "4.86 Ha",
+    "registrationDate": "2019-06-13",
+    "id": "KNY-TD-1010",
+    "email": "",
+    "verified": false
+  }
+]

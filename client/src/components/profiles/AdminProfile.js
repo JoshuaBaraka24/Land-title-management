@@ -5,6 +5,7 @@ import '../../components/GlobalStyles.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import AnimatedStat from '../AnimatedStat';
 import './ProfilePages.css';
+import LandRecordList from '../LandRecordList';
 
 const AdminProfile = () => {
   const { profile } = useAuth();
@@ -91,7 +92,6 @@ const AdminProfile = () => {
         
         <div className="profile-info">
           <h1 className="profile-name">{formData.fullname}</h1>
-          <p className="profile-role">System Administrator</p>
           <p className="profile-email">{formData.email}</p>
           <p className="profile-access">Access Level: {formData.accessLevel}</p>
         </div>

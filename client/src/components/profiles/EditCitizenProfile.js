@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../authContext';
 import '../../components/GlobalStyles.css';
 import './ProfilePages.css';
+import { supabase } from '../../supabase'; // adjust path as needed
 
 const EditCitizenProfile = () => {
   const { profile, updateProfile } = useAuth();
